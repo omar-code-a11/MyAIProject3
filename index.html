@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">    
+    <head>
+       
+<title> AI test  </title>
+<meta charset="UTF-8">
+    </head>
+<body style="background : rgb(84, 31, 31); color :red" >
+    <h1 style = "font-size: xx-large;"> Chat Opt </h1>
+    <div id ="chat"> </div>
+<div class="asking" style="border:1px solid #030303;  ">
+<label for="textt" style="padding: 20px;"> type somthing </label>
+   <input type="text"  id="textt" placeholder="write u r massege "> 
+<button onclick="sendmas()" style="margin: 13px;"> send </button>
+</div>
+<script>
+    async function sendmas(){
+        let input = document.getElementById('textt');
+        let asking = document.getElementById('chat');
+        let usermaaseeg = input.value;
+
+        if(!usermaaseeg) return;
+
+      
+        asking.innerHTML += "<p style='color: white;'><b>You:</b> " + usermaaseeg + "</p>";
+        asking.innerHTML += "<p id='temp'><b>AI:</b> thinking...</p>";
+        input.value = "";
+
+        try {
+          let response = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: usermaaseeg })
+});
+
+           
+            let data = await response.json();
+
+
+            document.getElementById('temp').remove();
+            asking.innerHTML += "<p><b>AI:</b> " + data.reply + "</p>";
+
+        } catch (error) {
+            document.getElementById('temp').innerHTML = "<b>AI:</b> Error: " + error.message;
+        }
+
+        asking.scrollTop = asking.scrollHeight;
+    }
+</script>
+ 
+     
+</body>
+</html>
